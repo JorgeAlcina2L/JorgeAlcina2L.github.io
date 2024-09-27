@@ -1,53 +1,83 @@
-<!-- Programa: Circulos Animados
-Nome: David Nicetto - Nº: 05  - Turma: 2°L
-Nome: David Wilson - Nº: 06  - Turma: 2°L
-Nome: Jorge Vinicius - Nº: 16 - Turma: 2°L
-Nome: Pietro Lopes - Nº: 22 - Turma: 2°L
-Nome: Henrique Cavalcante - N°: 29 -  Turma 2°L
-
-Descrição: Dois circulos se cruzando.
--->  y
+<!--
+Programa: Movedor De Quadrado
+Nome: David Wilson Carvalho dos Santos - Nº: 06 - Turma: 2°L
+Nome: Joao Victor Ataide Castro Paz - Nº: 15.
+Nome: Jorge Vinicius Rocha Cantarinho - Nº: 16.
+DESCRIÇÃO: Um "jogo" simples onde um quadrado pode ser movido usando botões na tela.
+-->
 
 <!DOCTYPE html>
+<meta charset="UTF-8">
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>  Círculos Animados </title>
-</head>
-<body>
+    <title>Movedor De Quadrado</title>
+    <style>
+        body{
+            background-color: #D3D3D3;
+        }
+        canvas {
+            border: 4px solid #8A2BE2;
+            background-color: #E6E6FA;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 20px 0 20px 0;
+        }
+    </style>
     <script>
         const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext('2d');
-        canvas.width = canvas.height = 400;
-        document.body.appendChild(canvas);
+        const context = canvas.getContext('2d');
+        let x = 200, y = 120; //posição inicial do nosso quadrado
+        let intervalId; //serve pra receber o valor retornado do setinterval//
 
-        const circles = [
-            { x: 30, y: 30, dx: 1, dy: 1, color: 'yellow' },
-            { x: 370, y: 370, dx: -1, dy: -1, color: 'blue' }
-        ];
+        function startGame() {
+            canvas.width = 480;
+            canvas.height = 270;
+            document.body.insertBefore(canvas, document.body.firstChild);//serve para inserir o canvas como primeiro elemento no body//
+            setInterval(updateGameArea, 20); //serve pra atualizar a area do canvas pelo updateGameArea, sempre que clicado em algum botão em até 20milisegundos//
+        }
 
-        setInterval(() => {
-            ctx.fillStyle = 'purple';
-            ctx.fillRect(0, 0, 400, 400);
+        function updateGameArea() {
+            context.clearRect(0, 0, canvas.width, canvas.height); //limpa todo o canva o preparando para o proximo frame do movimento do quadrado//
+            context.fillStyle = "#9932CC"; //vai adicionando a cor no quadrado//
+            context.fillRect(x, y, 30, 30); //vai desenhando o quadrado em tal posição dependendo do x e y//
+        }
 
-            // Atualiza e desenha o círculo amarelo
-            let yellow = circles[0];
-            yellow.x += yellow.dx;
-            yellow.y += yellow.dy;
-            ctx.fillStyle = yellow.color;
-            ctx.beginPath();
-            ctx.arc(yellow.x, yellow.y, 25, 0, Math.PI * 2);
-            ctx.fill();
+        function moveUp() {
+            y -= 2; 
+        }
 
-            // Atualiza e desenha o círculo azul
-            let blue = circles[1];
-            blue.x += blue.dx;
-            blue.y += blue.dy;
-            ctx.fillStyle = blue.color;
-            ctx.beginPath();
-            ctx.arc(blue.x, blue.y, 25, 0, Math.PI * 2);
-            ctx.fill();
-        }, 20);
+        function moveDown() {
+            y += 2; 
+        }
+
+        function moveLeft() {
+            x -= 2; 
+        }
+
+        function moveRight() {
+            x += 2; 
+        }
+
+        function startMoving(direction) {
+            if (intervalId) clearInterval(intervalId); //verifica se a variável intervalId já contém um identificador de intervalo ativo para que múltiplos intervalos não sejam criados ao mesmo tempo//
+            //serve para impedir que ao clicar em dois botoes diferentes as ações n aconteçam ao mesmo tempo tipo cima e direita impedindo que o quadrado va pra diagonal.
+            intervalId = setInterval(direction, 20); //serve para iniciar um novo movimento na direção(direction) especificada pelo ONMOUSEDOWN//
+        }
+
+        function stopMoving() { //serve para parar a ação/movimento quando onmouseup é acionado//
+            clearInterval(intervalId);
+        }
     </script>
+</head>
+<body onload="startGame();"> <!--coloca o canvas no body chamando a função startGame-->
+<br>
+    <button onmousedown="startMoving(moveUp)" onmouseup="stopMoving()">↑<br><b>cima</b></button>
+    <button onmousedown="startMoving(moveLeft)" onmouseup="stopMoving()">←<br><b>esquerda</b></button>
+    <button onmousedown="startMoving(moveRight)" onmouseup="stopMoving()">→<br><b>direita</b></button>
+    <button onmousedown="startMoving(moveDown)" onmouseup="stopMoving()">↓<br><b>baixo</b></button>
+   <!--   ONMOUSEDOWN é responsável por especificar a direção do movimento chamando a função startMoving(direction) | ONMOUSEUP é responsavel por encerrar a ação chamando a função stopMoving      -->
 </body>
 </html>
