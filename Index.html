@@ -1,0 +1,83 @@
+<!--
+Programa: Movedor De Quadrado
+Nome: David Wilson Carvalho dos Santos - Nº: 06 - Turma: 2°L
+Nome: Joao Victor Ataide Castro Paz - Nº: 15.
+Nome: Jorge Vinicius Rocha Cantarinho - Nº: 16.
+DESCRIÇÃO: Um "jogo" simples onde um quadrado pode ser movido usando botões na tela.
+-->
+
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html lang="pt-BR">
+<head>
+    <title>Movedor De Quadrado</title>
+    <style>
+        body{
+            background-color: #D3D3D3;
+        }
+        canvas {
+            border: 4px solid #8A2BE2;
+            background-color: #E6E6FA;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 20px 0 20px 0;
+        }
+    </style>
+    <script>
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext('2d');
+        let x = 200, y = 120; //posição inicial do nosso quadrado
+        let intervalId; //serve pra receber o valor retornado do setinterval//
+
+        function startGame() {
+            canvas.width = 480;
+            canvas.height = 270;
+            document.body.insertBefore(canvas, document.body.firstChild);//serve para inserir o canvas como primeiro elemento no body//
+            setInterval(updateGameArea, 20); //serve pra atualizar a area do canvas pelo updateGameArea, sempre que clicado em algum botão em até 20milisegundos//
+        }
+
+        function updateGameArea() {
+            context.clearRect(0, 0, canvas.width, canvas.height); //limpa todo o canva o preparando para o proximo frame do movimento do quadrado//
+            context.fillStyle = "#9932CC"; //vai adicionando a cor no quadrado//
+            context.fillRect(x, y, 30, 30); //vai desenhando o quadrado em tal posição dependendo do x e y//
+        }
+
+        function moveUp() {
+            y -= 2; 
+        }
+
+        function moveDown() {
+            y += 2; 
+        }
+
+        function moveLeft() {
+            x -= 2; 
+        }
+
+        function moveRight() {
+            x += 2; 
+        }
+
+        function startMoving(direction) {
+            if (intervalId) clearInterval(intervalId); //verifica se a variável intervalId já contém um identificador de intervalo ativo para que múltiplos intervalos não sejam criados ao mesmo tempo//
+            //serve para impedir que ao clicar em dois botoes diferentes as ações n aconteçam ao mesmo tempo tipo cima e direita impedindo que o quadrado va pra diagonal.
+            intervalId = setInterval(direction, 20); //serve para iniciar um novo movimento na direção(direction) especificada pelo ONMOUSEDOWN//
+        }
+
+        function stopMoving() { //serve para parar a ação/movimento quando onmouseup é acionado//
+            clearInterval(intervalId);
+        }
+    </script>
+</head>
+<body onload="startGame();"> <!--coloca o canvas no body chamando a função startGame-->
+<br>
+    <button onmousedown="startMoving(moveUp)" onmouseup="stopMoving()">↑<br><b>cima</b></button>
+    <button onmousedown="startMoving(moveLeft)" onmouseup="stopMoving()">←<br><b>esquerda</b></button>
+    <button onmousedown="startMoving(moveRight)" onmouseup="stopMoving()">→<br><b>direita</b></button>
+    <button onmousedown="startMoving(moveDown)" onmouseup="stopMoving()">↓<br><b>baixo</b></button>
+   <!--   ONMOUSEDOWN é responsável por especificar a direção do movimento chamando a função startMoving(direction) | ONMOUSEUP é responsavel por encerrar a ação chamando a função stopMoving      -->
+</body>
+</html>
